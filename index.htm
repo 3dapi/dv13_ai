@@ -1,0 +1,706 @@
+<?php
+	include '../base/lc_header.php';
+	include '../base/lc_util.php';
+?>
+
+<!--------------------------- Body Begin ---------------------------------------->
+
+<div class="Section1">
+
+<br>
+<h1>◈인공 지능 (A. I.)◈</h1>
+<br>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:16.0pt'>1.9 </span><span style='font-size:16.0pt'>길 찾기</span></p>
+
+<p class=MsoNormal>인공 지능의 길 찾기 알고리듬에<span lang=EN-US> STL</span>을 활용해서 구현 하면 좀 더
+쉽게 알고리듬을 프로그램으로 만들 수 있습니다<span lang=EN-US>. </span>길 찾기 문제는 인공지능에서 주어진 초기 상태에서 목표
+상태를 도달하기까지의 경로 탐색의 한 종류입니다<span lang=EN-US>. </span>길 찾기는 인공 지능의 그래프의 탐색<span
+lang=EN-US>(Search)</span>으로 표현할 수 있습니다<span lang=EN-US>. </span>인공지능에서 탐색은 크게 맹목적
+탐색<span lang=EN-US>(Blind Search)</span>과 경험적 탐색<span lang=EN-US>(Heuristic
+Search) </span>두 종류가 있습니다<span lang=EN-US>.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal>맹목적 탐색은 목표 노드의 위치에 상관 없이 시작 노드부터 순서대로 탐색하는 방법입니다<span
+lang=EN-US>. &nbsp;DFS(Depth First Search: </span>깊이 우선 탐색<span lang=EN-US>),
+BFS(Breadth First Search: </span>너비 우선 탐색<span lang=EN-US>)</span>은 맹목적 탐색의 한 종류이며
+목표 노드까지의 도달 방법 중에서 비용이 적게 드는 최적의 경로를 보장하는 탐색 방법은 균일 비용 탐색<span lang=EN-US>(Uniform
+Search)</span>인<span lang=EN-US> Dijkstra(</span>데이크스트라<span lang=EN-US>) </span>탐색
+방법이 있습니다<span lang=EN-US>.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>Dijkstra </span>알고리듬은 최적의 경로를 찾아주지만 문제는 너무 많은
+노드들을 탐색한다는데 있습니다<span lang=EN-US>. </span>경험적 탐색은 목표 노드의 위치를 이용해서 탐색할 노드들을 줄여 프로그램의
+효율을 높이는 방법입니다<span lang=EN-US>. </span>경험적 탐색의 대표적인 예가 <span lang=EN-US>A*-</span>알고리듬입니다<span
+lang=EN-US>. A*-</span>알고리듬을 배우는 방법은 여러 가지가 있지만 <span lang=EN-US>Dijkstra </span>알고리듬을
+이해하는 것이 가장 빠른 지름길입니다<span lang=EN-US>. </span>여러분은 <span lang=EN-US>Dijkstra </span>알고리듬을
+구현할 수 있으면 <span lang=EN-US>A*-</span>알고리듬 또한 쉽게 구현할 수 있습니다<span lang=EN-US>.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:14.0pt'>1.9.1 Dijkstra </span><span
+style='font-size:14.0pt'>알고리듬</span></p>
+
+<p class=MsoNormal><span lang=EN-US>Dijkstra </span>알고리듬은 다음과 같이 알려져 있습니다<span
+lang=EN-US>.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='color:green'>// Define</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='color:green'>// G: </span><span
+style='color:green'>탐색 비용<span lang=EN-US>, Q: </span>탐색할 노드 리스트<span
+lang=EN-US>, s: </span>시작 노드<span lang=EN-US>, t: </span>목표 노드</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='color:green'>// C(i, j): </span><span
+style='color:green'>간선<span lang=EN-US>(Edge) {i, j}</span>의 경로 비용<span
+lang=EN-US>(Cost)</span></span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='color:blue'>for</span><span
+lang=EN-US> All Vertex v&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
+lang=EN-US style='color:green'>// </span><span style='color:green'>모든 노드의 경로 비용은
+<span lang=EN-US>∞</span>로 설정</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; G(v)
+← ∞</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>G(s) ← 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
+lang=EN-US style='color:green'>// </span><span style='color:green'>시작 노드의 비용은<span
+lang=EN-US> 0</span></span></p>
+
+<p class=MsoNormal><span lang=EN-US>Q←V&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
+lang=EN-US style='color:green'>// </span><span style='color:green'>모든 정점을 탐색할 리스트에
+추가</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='color:blue'>while</span><span
+lang=EN-US>( Q ≠ ø)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span lang=EN-US style='color:green'>//
+</span><span style='color:green'>탐색할 노드가 없을 때까지 반복</span></p>
+
+<p class=MsoNormal><span lang=EN-US>{</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; v←</span><span
+lang=EN-US style='color:blue'>min</span><span lang=EN-US>{G(v)}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
+lang=EN-US style='color:green'>// Q</span><span style='color:green'>에서 경로비용이 가장
+작은 정점 <span lang=EN-US>v </span>선택</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
+lang=EN-US style='color:blue'>if</span><span lang=EN-US> v == t </span><span
+lang=EN-US style='color:blue'>then</span><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
+lang=EN-US style='color:green'>// v</span><span style='color:green'>가 목표 노드이면 중지</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
+lang=EN-US style='color:blue'>break</span><span lang=EN-US>;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Q←Q-{v}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
+lang=EN-US style='color:green'>// </span><span style='color:green'>탐색 리스트 <span
+lang=EN-US>Q </span>에서<span lang=EN-US> v </span>제거</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
+lang=EN-US style='color:green'>// </span><span style='color:green'>이미 계산 된<span
+lang=EN-US> G(x)</span>와 새로 계산 되는 <span lang=EN-US>&quot;G(v) + C(v, x)&quot; </span>중에서</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
+lang=EN-US style='color:green'>// </span><span style='color:green'>가장 작은 값을 새로운
+<span lang=EN-US>G(x)</span>로 변경</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
+lang=EN-US style='color:blue'>for_each </span><span lang=EN-US>v </span>에 인접한 모든
+정점<span lang=EN-US> x</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; G(x)←
+</span><span lang=EN-US style='color:blue'>min</span><span lang=EN-US>{G(x),
+G(v) + C(v, x)}</span></p>
+
+<p class=MsoNormal><span lang=EN-US>}</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal>프로그램으로<span lang=EN-US> Dijkstra </span>알고리듬을 구현하기 위해서 앞으로 탐색할
+노드들의 집합을 <span lang=EN-US>Open List</span>라 하고 이미 탐색을 완료한 노드들의 집합을 <span
+lang=EN-US>Close List </span>라 정의 합시다<span lang=EN-US>.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>Dijkstra </span>알고리듬 대로 프로그램을 만들면 모든 노드를 전부
+탐색하게 되므로 모든 노드를 탐색할 노드<span lang=EN-US> Open List</span>에 넣지 않고 시작 노드부터 조건에 따라<span
+lang=EN-US> Open List</span>에 추가해서 구현합니다<span lang=EN-US>. </span>이렇게 하면 전체 리스트를
+검사하지 않게 되어 프로그램의 효율이 높아 집니다<span lang=EN-US>.</span></p>
+
+<p class=MsoNormal>다음은 <span lang=EN-US>Dijkstra</span>을 프로그램으로 구현할 때의 순서입니다<span
+lang=EN-US>.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>0. </span>탐색할 모든 노드의 경로 비용<span lang=EN-US>
+G</span>는<span lang=EN-US> ∞</span>로 설정한다<span lang=EN-US>.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>1. Open List</span>에 출발노드를 넣는다<span
+lang=EN-US>. </span>출발노드의<span lang=EN-US> G</span>는<span lang=EN-US> 0</span>으로
+정한다<span lang=EN-US>.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>2. Open List</span>에 노드가 남아 있는 동안 다음을 반복한다<span
+lang=EN-US>.</span></p>
+
+<p class=MsoNormal style='text-indent:15.0pt'><span lang=EN-US>2.1 Open List</span>에서<span
+lang=EN-US> G</span>가 가장 작은 노드를<span lang=EN-US> m </span>이라 하고 이 노드를 꺼내어<span
+lang=EN-US> Close List</span>에 넣는다<span lang=EN-US>.</span></p>
+
+<p class=MsoNormal style='text-indent:15.0pt'><span lang=EN-US>2.2 m</span>이 목표
+노드이면 탐색은 성공으로 끝낸다<span lang=EN-US>.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp; 2.3 m</span>을 확장하여 후계 노드<span
+lang=EN-US>(n)</span>들에 대해서 다음을 반복한다<span lang=EN-US>.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2.3.1 </span>각각의
+후계 노드들에 대한 경로 비용<span lang=EN-US> G_new(n) = G(m) + C(m, n)</span>을 계산 한다<span
+lang=EN-US>.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2.3.2 n</span>이<span
+lang=EN-US> Open List</span>에 있다면</p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+2.3.2.1 </span>이전<span lang=EN-US> G </span>값이 새로운<span lang=EN-US> G_new </span>보다
+크면 이전 값을 새로 계산한<span lang=EN-US> G_new</span>로 바꾸고</p>
+
+<p class=MsoNormal style='margin-left:40.0pt;text-indent:55.0pt'>부모 노드 또한<span
+lang=EN-US> m</span>으로 교체한다<span lang=EN-US>.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+2.3.2.2 </span>이전의<span lang=EN-US> G </span>값이 새로 계산한<span lang=EN-US> G_new </span>보다
+작다면 이 노드는 무시한다<span lang=EN-US>.</span></p>
+
+<p class=MsoNormal style='text-indent:30.0pt'><span lang=EN-US>2.3.3 n</span>이<span
+lang=EN-US> Close List</span>에 있다면<span lang=EN-US> n</span>은 무시한다<span
+lang=EN-US>.</span></p>
+
+<p class=MsoNormal style='text-indent:30.0pt'><span lang=EN-US>2.3.4 n</span>이<span
+lang=EN-US> Open List</span>와<span lang=EN-US> Close List</span>에 없다면 부모 노드<span
+lang=EN-US> m</span>과 경로 비용<span lang=EN-US> G_new</span>를 첨가하고 </p>
+
+<p class=MsoNormal style='text-indent:60.0pt'><span lang=EN-US>Open List</span>에
+넣는다<span lang=EN-US>.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>3. </span>탐색은 실패로 끝낸다<span lang=EN-US>.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>Dijkstra</span>를 작성하기 전에 다음과 같은 그래프 구조에서<span
+lang=EN-US> v0</span>를 출발 노드로 하고 목적 노드<span lang=EN-US> v5</span>에 도달하는 최적 경로를 구해
+봅시다<span lang=EN-US>.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US><img width=382 height=204
+src="https://github.com/3dapi/dv13_ai/raw/master/dv12_ai.files/image001.gif"></span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal>먼저 모든 노드의 경로비용과 부모 노드를 정합니다<span lang=EN-US>.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US><img width=383 height=204
+src="https://github.com/3dapi/dv13_ai/raw/master/dv12_ai.files/image002.gif"></span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal>다음으로 출발 노드<span lang=EN-US> v0</span>의 경로 비용을<span
+lang=EN-US> 0</span>으로 설정하고 부모 노드는 자신<span lang=EN-US> v0</span>로 설정합니다<span
+lang=EN-US>. </span>그리고 나서 인접 노드<span lang=EN-US> v1</span>과<span lang=EN-US>
+v2</span>의 경로 비용을 계산합니다<span lang=EN-US>. v1</span>과<span lang=EN-US> v2</span>의
+경로 비용은 이전에 <span lang=EN-US>∞ </span>이므로 새로운 값으로 바뀌게 되고 부모 노드는<span lang=EN-US>
+v0</span>가 됩니다<span lang=EN-US>.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;<img width=383 height=204
+src="https://github.com/3dapi/dv13_ai/raw/master/dv12_ai.files/image003.gif"></span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>Open List</span>에서<span lang=EN-US> v1</span>과<span
+lang=EN-US> v2</span>를 추가하고 <span lang=EN-US>while </span>문의 처음으로 와서<span
+lang=EN-US> Open List</span>에서 경로가 최소인 노드를 선택하게 되면<span lang=EN-US> v2</span>가 선택이
+됩니다<span lang=EN-US>. v2</span>에서 인접한 하위 노드<span lang=EN-US> v1, v3, v4</span>의
+경로 비용을 계산하고 이전 값과 비교해서 이전 값보다 작으면 경로 비용을 작은 값으로 바꾸고 부모 노드를<span lang=EN-US> v2</span>로
+합니다<span lang=EN-US>. </span>또한<span lang=EN-US> v3, v4</span>는<span
+lang=EN-US> Open List</span>에 추가합니다<span lang=EN-US>.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US><img width=383 height=204
+src="https://github.com/3dapi/dv13_ai/raw/master/dv12_ai.files/image004.gif"></span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>Open List</span>에 남아 있는<span lang=EN-US>
+v1, v3, v4 </span>중에서 경로 비용이 가장 작은<span lang=EN-US> v1</span>을 선택하고 이전의 내용을 반복하면<span
+lang=EN-US> v3, v4, v5 </span>기준으로<span lang=EN-US> while</span>문이 다음 그림처럼 진행이 됩니다<span
+lang=EN-US>.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;<img width=385 height=204
+src="https://github.com/3dapi/dv13_ai/raw/master/dv12_ai.files/image005.gif">&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US><img width=385 height=204
+src="https://github.com/3dapi/dv13_ai/raw/master/dv12_ai.files/image006.gif"></span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;<img width=387 height=204
+src="https://github.com/3dapi/dv13_ai/raw/master/dv12_ai.files/image007.gif"></span></p>
+
+<p class=MsoNormal><span lang=EN-US><img width=385 height=204
+src="https://github.com/3dapi/dv13_ai/raw/master/dv12_ai.files/image008.gif"></span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal>최적 경로는 목적 노드<span lang=EN-US> v5</span>부터 부모노드를 찾아오면 되는데 그림의
+최적 경로는 부모 노드가<span lang=EN-US> v5 </span><span lang=EN-US style='font-family:
+Wingdings'>&agrave;</span><span lang=EN-US> v4 </span><span lang=EN-US
+style='font-family:Wingdings'>&agrave;</span><span lang=EN-US> v3 </span><span
+lang=EN-US style='font-family:Wingdings'>&agrave;</span><span lang=EN-US> v1 </span><span
+lang=EN-US style='font-family:Wingdings'>&agrave;</span><span lang=EN-US> v2 </span><span
+lang=EN-US style='font-family:Wingdings'>&agrave;</span><span lang=EN-US> v0</span>이 되므로<span
+lang=EN-US> v0, v2, v1, v3, v4, v5</span>를 거치는 경로가 됩니다<span lang=EN-US>.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal>게임에서 <span lang=EN-US>Dijkstra </span>방법은 격자가 일정한 실외 지형에서 길 찾기
+용도로 자주 사용됩니다<span lang=EN-US>. </span>격자가 일정하면 인접한 노드<span lang=EN-US>(Cell)</span>까지의
+경로 비용은 다음과 같이 설정 할 수 있습니다<span lang=EN-US>.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US><img width=205 height=204
+src="https://github.com/3dapi/dv13_ai/raw/master/dv12_ai.files/image009.gif"></span></p>
+
+<p class=MsoNormal><span lang=EN-US>&lt;</span>격자의 크기가 일정한 노드<span lang=EN-US>
+m</span>의 인접한 노드에 대한 경로 비용<span lang=EN-US>&gt;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal>여기서 경로의 비용이<span lang=EN-US> 141</span>로 설정한 것은 √<span
+lang=EN-US>2</span>≒<span lang=EN-US>1.41 </span>를 정수화 하기 위해서<span lang=EN-US>
+100</span>을 곱한 값입니다<span lang=EN-US>. </span>이로 인해 바로 옆에 있는 노드의 경로 비용은<span
+lang=EN-US> 100</span>으로 설정되었습니다<span lang=EN-US>.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal>만약<span lang=EN-US> 2</span>차원 격자의 자료가 다음과 같이 움직일 수 있는 영역은<span
+lang=EN-US> 0</span>으로 갈 수 없는 벽은<span lang=EN-US> 1</span>로 주어질 때<span
+lang=EN-US> Dijkstra</span>를 적용해 봅시다<span lang=EN-US>.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='color:blue'>#define </span><span
+lang=EN-US style='color:#A000A0'>TILE_LEN </span><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
+lang=EN-US style='color:red'>11</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='word-break:keep-all'><span lang=EN-US
+style='color:blue'>INT</span><span lang=EN-US> bMap[</span><span lang=EN-US
+style='color:#A000A0'>TILE_LEN</span><span lang=EN-US>][</span><span
+lang=EN-US style='color:#A000A0'>TILE_LEN</span><span lang=EN-US>]&nbsp; =</span></p>
+
+<p class=MsoNormal style='word-break:keep-all'><span lang=EN-US>{</span></p>
+
+<p class=MsoNormal style='word-break:keep-all'><span lang=EN-US>&nbsp; </span><span
+lang=EN-US style='color:green'>// 0&nbsp; 1&nbsp; 2&nbsp; 3&nbsp; 4&nbsp;
+5&nbsp; 6&nbsp; 7&nbsp; 8&nbsp; 9&nbsp; 10</span></p>
+
+<p class=MsoNormal style='word-break:keep-all'><span lang=EN-US>&nbsp; { &nbsp;</span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>1</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>1</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, }, </span><span
+lang=EN-US style='color:green'>// 0</span></p>
+
+<p class=MsoNormal style='word-break:keep-all'><span lang=EN-US>&nbsp; {&nbsp; </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>1</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, }, </span><span
+lang=EN-US style='color:green'>// 1</span></p>
+
+<p class=MsoNormal style='word-break:keep-all'><span lang=EN-US>&nbsp; {&nbsp; </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>1</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, }, </span><span
+lang=EN-US style='color:green'>// 2</span></p>
+
+<p class=MsoNormal style='word-break:keep-all'><span lang=EN-US>&nbsp; {&nbsp; </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>1</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>1</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, }, </span><span
+lang=EN-US style='color:green'>// 3</span></p>
+
+<p class=MsoNormal style='word-break:keep-all'><span lang=EN-US>&nbsp; {&nbsp; </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>1</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, }, </span><span
+lang=EN-US style='color:green'>// 4</span></p>
+
+<p class=MsoNormal style='word-break:keep-all'><span lang=EN-US>&nbsp; {&nbsp; </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>1</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, }, </span><span
+lang=EN-US style='color:green'>// 5</span></p>
+
+<p class=MsoNormal style='word-break:keep-all'><span lang=EN-US>&nbsp; {&nbsp; </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>1</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>1</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>1</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>1</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>1</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>1</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>1</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>1</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>1</span><span lang=EN-US>, }, </span><span
+lang=EN-US style='color:green'>// 6</span></p>
+
+<p class=MsoNormal style='word-break:keep-all'><span lang=EN-US>&nbsp; {&nbsp; </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, }, </span><span
+lang=EN-US style='color:green'>// 7</span></p>
+
+<p class=MsoNormal style='word-break:keep-all'><span lang=EN-US>&nbsp; {&nbsp; </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, }, </span><span
+lang=EN-US style='color:green'>// 8</span></p>
+
+<p class=MsoNormal style='word-break:keep-all'><span lang=EN-US>&nbsp; {&nbsp; </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>1</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, }, </span><span
+lang=EN-US style='color:green'>// 9</span></p>
+
+<p class=MsoNormal style='word-break:keep-all'><span lang=EN-US>&nbsp; {&nbsp; </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>1</span><span lang=EN-US>, </span><span
+lang=EN-US style='color:red'>0</span><span lang=EN-US>, }, </span><span
+lang=EN-US style='color:green'>// 10</span></p>
+
+<p class=MsoNormal><span lang=EN-US>};</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal>여러분은 <span lang=EN-US>Start Node</span>에서<span lang=EN-US>
+Terminal Node</span>까지의 경로를 찾기 위해서 탐색에 대한 정보를 저장하기 위한 구조체를 작성해야 합니다<span
+lang=EN-US>.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='word-break:keep-all'><span lang=EN-US
+style='color:blue'>struct</span><span lang=EN-US> </span><span lang=EN-US
+style='color:blue'>UscNode</span></p>
+
+<p class=MsoNormal style='word-break:keep-all'><span lang=EN-US>{</span></p>
+
+<p class=MsoNormal style='word-break:keep-all'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
+lang=EN-US style='color:blue'>INT</span><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp; nCurX;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
+lang=EN-US style='color:green'>// </span><span style='color:green'>셀 인덱스<span
+lang=EN-US> X</span></span></p>
+
+<p class=MsoNormal style='word-break:keep-all'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
+lang=EN-US style='color:blue'>INT</span><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp; nCurY;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
+lang=EN-US style='color:green'>// </span><span style='color:green'>셀 인덱스 <span
+lang=EN-US>Y</span></span></p>
+
+<p class=MsoNormal style='word-break:keep-all'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
+lang=EN-US style='color:blue'>INT</span><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp; nCst;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
+lang=EN-US style='color:green'>// </span><span style='color:green'>셀까지 경로 비용</span></p>
+
+<p class=MsoNormal style='word-break:keep-all'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
+lang=EN-US style='color:blue'>INT</span><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp; eLst;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
+lang=EN-US style='color:green'>// </span><span style='color:green'>탐색 후 노드 위치<span
+lang=EN-US>: </span>탐색 안함<span lang=EN-US>. Open List. Close List.</span></span></p>
+
+<p class=MsoNormal style='word-break:keep-all'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
+lang=EN-US style='color:blue'>INT</span><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp; nPrnX;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
+lang=EN-US style='color:green'>// </span><span style='color:green'>부모 셀 인덱스<span
+lang=EN-US> X</span></span></p>
+
+<p class=MsoNormal style='word-break:keep-all'><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
+lang=EN-US style='color:blue'>INT</span><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp; nPrnY;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
+lang=EN-US style='color:green'>// </span><span style='color:green'>부모 셀 인덱스 <span
+lang=EN-US>Y</span></span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
+lang=EN-US style='color:blue'>INT</span><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp; bWall;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><span
+lang=EN-US style='color:green'>// </span><span style='color:green'>노드가 벽인가<span
+lang=EN-US>?</span></span></p>
+
+<p class=MsoNormal><span lang=FR>};</span></p>
+
+<p class=MsoNormal><span lang=FR>&nbsp;</span></p>
+
+<p class=MsoNormal>여러분은 <span lang=FR><a href="https://github.com/3dapi/dv13_ai/raw/master/dv13_01UniformCost01.zip">dv13_01UniformCost01.zip</a></span>의
+<span lang=FR>_consoleTest01 </span>폴더의<span lang=FR> main.cpp</span>파일을 보면 이 구조체를
+이용해서 <span lang=EN-US>Dijkstra </span>방법으로 시작 노드에서 목표 노드를 검색하는 예를 볼 수 있습니다<span
+lang=FR>. </span>실행을 하면 경로 비용과 부모 노드의 인덱스가<span lang=FR> result.txt </span>파일에 저장됩니다<span
+lang=FR>. _consoleTest02 </span>폴더는 좀 더 넓은 격자에 대한 예제입니다<span lang=FR>.</span></p>
+
+<p class=MsoNormal><span lang=FR>dv13_01UniformCost01 </span>폴더의 <span lang=FR>PathFind.dsp</span>은
+경로를 화면에<span lang=FR> D3DX Sprite</span>를 이용해서 출력합니다<span lang=FR>. &nbsp;Main.cpp
+</span>파일의 <span lang=FR>PathFinding() </span>함수는 경로를 찾는 함수이며 프로젝트를 실행하면<span
+lang=FR> 10000</span>정도<span lang=FR> PathFinding() </span>함수를 호출해서 경로를 계산하는 시간을
+측정합니다<span lang=FR>.</span></p>
+
+<p class=MsoNormal><span lang=FR>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=FR><a href="https://github.com/3dapi/dv13_ai/raw/master/dv13_01UniformCost02.zip">dv13_01UniformCost02.zip</a>
+</span>예제는 부모 노드 정보를 인덱스 대신 포인터를 이용한 예제입니다<span lang=FR>.</span></p>
+
+<p class=MsoNormal>실행하면 다음과 같은 화면을 볼 수 있습니다<span lang=FR>.</span></p>
+
+<p class=MsoNormal><span lang=FR>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=FR><img border=0 width=227 height=227
+src="https://github.com/3dapi/dv13_ai/raw/master/dv12_ai.files/image010.gif"></span></p>
+
+<p class=MsoNormal><span lang=FR>&lt;Dijkstra </span>알고리듬을 이용한 길 찾기<span
+lang=FR>: <a href="https://github.com/3dapi/dv13_ai/raw/master/dv13_01UniformCost02.zip">dv13_01UniformCost02.zip</a>&gt;</span></p>
+
+<p class=MsoNormal><span lang=FR>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=FR>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US style='font-size:14.0pt'>1.9.2 A* </span><span
+style='font-size:14.0pt'>알고리듬</span></p>
+
+<p class=MsoNormal><span lang=EN-US>Dijkstra </span>알고리듬에서는 출발노드로부터 현재 노드까지의 가중치를
+합한 값을 평가함수로 정했습니다<span lang=EN-US>. A* </span>알고리듬은 이 부분을 개선해서 현재 노드<span
+lang=EN-US>(n)</span>까지의 비용<span lang=EN-US> G(n)</span>과 앞으로 목표 노드까지 비용<span
+lang=EN-US>(Heurist </span>추정 값<span lang=EN-US>) H(n)</span>을 합한 값을 노드를 탐색하는 평가함수로
+정합니다<span lang=EN-US>.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>F(n) = G(n) + H(n)</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>A* </span>알고리듬은<span lang=EN-US> H</span>값에
+따라 달라지는데 만약<span lang=EN-US> H</span>가 완벽하다면 탐색은 최적 경로에 대한 노드를 한 번에 찾아 낼 수 있을 것입니다<span
+lang=EN-US>. H</span>가 완벽하지 않더라도<span lang=EN-US> H</span>가<span lang=EN-US> G</span>에
+대해서<span lang=EN-US> [0, 1]</span>이면 탐색 횟수는 줄어들고 거의 최적화 경로를 찾아냅니다<span
+lang=EN-US>. H=0</span>이면<span lang=EN-US> Dijkstra </span>방법과 동일합니다<span
+lang=EN-US>.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal>따라서<span lang=EN-US> Dijkstra </span>방법을 사용하는 것보다<span
+lang=EN-US> A*</span>를 사용하는 것이 여러모로 이점이 있습니다<span lang=EN-US>. </span>다음은<span
+lang=EN-US> Dijkstra </span>를 수정한<span lang=EN-US> A* </span>알고리듬입니다<span
+lang=EN-US>.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>0. </span>탐색할 모든 노드의 경로 비용<span lang=EN-US>
+G</span>는<span lang=EN-US> ∞</span>로 설정한다<span lang=EN-US>.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>1. </span>출발 노드의<span lang=EN-US> G(0), H,
+F</span>를 계산한 후에<span lang=EN-US> Open List</span>에 를 넣는다<span lang=EN-US>.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>2. Open</span>에 노드가 남아 있는 동안 다음을 반복한다<span
+lang=EN-US>.</span></p>
+
+<p class=MsoNormal style='text-indent:15.0pt'><span lang=EN-US>2.1 Open</span>에서<span
+lang=EN-US> F</span>가 가장 작은 노드를<span lang=EN-US> m </span>이라 하고 이 노드를 꺼내어<span
+lang=EN-US> Close</span>에 넣는다<span lang=EN-US>.</span></p>
+
+<p class=MsoNormal style='text-indent:30.0pt'><span lang=EN-US>2.2 m</span>이 목표
+노드이면 탐색은 성공으로 끝낸다<span lang=EN-US>.</span></p>
+
+<p class=MsoNormal style='text-indent:30.0pt'><span lang=EN-US>2.3 m</span>을 확장하여
+후계 노드<span lang=EN-US>(n)</span>들에 대해서 다음을 반복한다<span lang=EN-US>.</span></p>
+
+<p class=MsoNormal style='text-indent:30.0pt'><span lang=EN-US>2.3.1 </span>각각의
+후계 노드들에 대한 평가 값<span lang=EN-US> F_new(n) = G_new(n) + H_new(n)</span>을 계산 한다<span
+lang=EN-US>.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal style='text-indent:30.0pt'><span lang=EN-US>2.3.2 n</span>이<span
+lang=EN-US> Open </span>또는<span lang=EN-US> Close </span>에 있다면</p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+2.3.2.1 </span>이전의<span lang=EN-US> F_old </span>값이 새로 계산한<span lang=EN-US>
+F_new </span>보다 작다면 이 노드는 무시한다<span lang=EN-US>.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+2.3.2.2 </span>이전의<span lang=EN-US> F_old </span>값이 새로 계산한<span lang=EN-US>
+F_new </span>보다 크다면 이전의<span lang=EN-US> F_old</span>와 새로</p>
+
+<p class=MsoNormal style='text-indent:95.0pt'><span lang=EN-US>&nbsp;</span>계산한<span
+lang=EN-US> F_new</span>를 교체한 후<span lang=EN-US>, </span>부모 노드 또한<span
+lang=EN-US> m</span>으로 교체한다<span lang=EN-US>.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2.3.2 n</span>이<span
+lang=EN-US> Open</span>과<span lang=EN-US> Close</span>에 없다면 부모 노드<span
+lang=EN-US> m</span>과 경로 비용<span lang=EN-US> F_new</span>를 첨가하고</p>
+
+<p class=MsoNormal style='text-indent:55.0pt'><span lang=EN-US>&nbsp;Open List</span>에
+넣는다<span lang=EN-US>.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>3. </span>탐색은 실패로 끝낸다<span lang=EN-US>.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>A* </span>알고리듬은<span lang=EN-US> H(n)</span>를
+설정 방법에 따라 최적 경로와 효율이 달라집니다<span lang=EN-US>. </span>게임에서 격자<span lang=EN-US>(Cell)</span>의
+크기가 일정한 공간이라면<span lang=EN-US> H </span>값을 다음과 같이 맨하튼<span lang=EN-US>(Manhattan)
+</span>방식으로 계산하면 산술 계산이 되어 처리 속도 가 빨라집니다<span lang=EN-US>.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><i><span lang=PT-BR>H(n) = | Node n.x - Terminal Node x | +
+| Node n.y - Terminal Node y |</span></i></p>
+
+<p class=MsoNormal><span lang=PT-BR>&nbsp;</span></p>
+
+<p class=MsoNormal>좀 더 정확한<span lang=EN-US> H(n)</span>을 제공하고자 한다면 거리의 제곱을 이용한 방법도
+좋습니다<span lang=EN-US>.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><i><span lang=PT-BR>H(n) = ( Node n.x - Terminal Node x )<sup>2</sup>
++ ( Node n.y - Terminal Node y )<sup>2</sup></span></i></p>
+
+<p class=MsoNormal><span lang=PT-BR>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US><a href="https://github.com/3dapi/dv13_ai/raw/master/dv13_02A_star.zip">dv13_02A_star.zip</a></span>은<span
+lang=EN-US> A* </span>알고리듬의 예로<span lang=EN-US> H </span>값은 대각선의 길이는 맨하튼<span
+lang=EN-US>(Manhattan) </span>방식을 계산을 하고 나머지 직선 거리는 격자 사이의 거리로 계산을 한 예제 입니다<span
+lang=EN-US>. </span>폴더 <span lang=EN-US>_consoleTest</span>은 이전의<span
+lang=EN-US> Dijkstra </span>예처럼 경로 계산의 결과를 파일로 출력하는 예제이며<span lang=EN-US>
+Main.cpp </span>파일의 <span lang=EN-US>PathFinding() </span>함수는<span lang=EN-US>
+A* </span>길 찾기를 구현한 함수입니다<span lang=EN-US>.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US><img border=0 width=227 height=227
+src="https://github.com/3dapi/dv13_ai/raw/master/dv12_ai.files/image011.gif"></span></p>
+
+<p class=MsoNormal><span lang=FR>&lt;A* </span>알고리듬을 이용한 길 찾기<span lang=FR>: </span><span
+lang=EN-US><a href="https://github.com/3dapi/dv13_ai/raw/master/dv13_02A_star.zip">dv13_02A_star.zip</a>&gt;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal>같은 조건에 대해서 <span lang=FR>A* </span>알고리듬이<span lang=FR>
+Dijkstra </span>보다<span lang=FR> 3</span>배 정도 빠름을 볼 수 있는데 이것은 그 만큼의 노드 탐색 횟수가 줄었음을
+의미합니다<span lang=FR>.</span></p>
+
+<p class=MsoNormal><span lang=FR>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US><a href="https://github.com/3dapi/dv13_ai/raw/master/dv13_02A_star.zip">dv13_02A_star.zip</a>
+</span>예제에서 시간을 측정하기 위해서<span lang=EN-US> 10000 </span>정도 <span lang=EN-US>PathFinding()
+</span>함수를 호출하는 것을<span lang=EN-US> 1</span>회로 정하고<span lang=EN-US> LEFT,
+RIGHT, UP, DOWN </span>키를 누르면 목표 노드의 위치가 수정되고<span lang=EN-US> A* </span>경로를 찾는
+것을 볼 수 있습니다<span lang=EN-US>.</span></p>
+<br>
+<br>
+
+</div>
+
+<?php
+	include '../base/lc_tail.php';
+?>
